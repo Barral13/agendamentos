@@ -9,7 +9,6 @@ import PainelAdmin from "./pages/PainelAdmin";
 import PainelColaborador from "./pages/PainelColaborador";
 import PainelCliente from "./pages/PainelCliente";
 import ProtectedRoute from "./routes/ProtectedRoute";
-import DashboardLayout from "./components/Layout/DashboardLayout";
 
 const App = () => {
   return (
@@ -19,9 +18,7 @@ const App = () => {
         path="/admin"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <DashboardLayout>
-              <PainelAdmin />
-            </DashboardLayout>
+            <PainelAdmin />
           </ProtectedRoute>
         }
       />
@@ -29,9 +26,7 @@ const App = () => {
         path="/colaborador"
         element={
           <ProtectedRoute allowedRoles={["colaborador"]}>
-            <DashboardLayout>
-              <PainelColaborador />
-            </DashboardLayout>
+            <PainelColaborador />
           </ProtectedRoute>
         }
       />
@@ -39,9 +34,7 @@ const App = () => {
         path="/cliente"
         element={
           <ProtectedRoute allowedRoles={["cliente"]}>
-            <DashboardLayout>
-              <PainelCliente />
-            </DashboardLayout>
+            <PainelCliente />
           </ProtectedRoute>
         }
       />

@@ -9,10 +9,17 @@ import {
   FiChevronRight,
   FiUsers,
   FiBarChart,
-  FiBriefcase,  // Novo ícone para "Serviços"
+  FiBriefcase,
 } from "react-icons/fi";
 
-const Sidebar = ({ collapsed, setCollapsed, sidebarOpen, setSidebarOpen }) => {
+const Sidebar = ({
+  collapsed,
+  setCollapsed,
+  sidebarOpen,
+  setSidebarOpen,
+  section,
+  setSection,
+}) => {
   const { userData, logout } = useAuth();
   const [darkMode, setDarkMode] = useState(localStorage.getItem("theme") === "dark");
 
@@ -24,26 +31,31 @@ const Sidebar = ({ collapsed, setCollapsed, sidebarOpen, setSidebarOpen }) => {
   const toggleCollapse = () => setCollapsed(!collapsed);
 
   const getSidebarItems = () => {
-    // Verifica o tipo de usuário e retorna os itens do menu
     if (userData?.role === "admin") {
       return [
-        { icon: <FiHome />, label: "Início", onClick: () => setSidebarOpen(false) },
-        { icon: <FiUsers />, label: "Usuários", onClick: () => setSidebarOpen(false) },
-        { icon: <FiBarChart />, label: "Relatórios", onClick: () => setSidebarOpen(false) },
-        { icon: <FiBriefcase />, label: "Serviços", onClick: () => setSidebarOpen(false) }, {/* Ícone de "Serviços" */}
-      ];
-    } else if (userData?.role === "colaborador") {
-      return [
-        { icon: <FiHome />, label: "Início", onClick: () => setSidebarOpen(false) },
-        { icon: <FiBriefcase />, label: "Serviços", onClick: () => setSidebarOpen(false) }, {/* Ícone de "Serviços" */}
-      ];
-    } else if (userData?.role === "cliente") {
-      return [
-        { icon: <FiHome />, label: "Início", onClick: () => setSidebarOpen(false) },
-        { icon: <FiBriefcase />, label: "Serviços", onClick: () => setSidebarOpen(false) }, {/* Ícone de "Serviços" */}
+        { icon: <FiHome />, label: "Início", section: "inicio" },
+        { icon: <FiUsers />, label: "Usuários", section: "usuarios" },
+        { icon: <FiBarChart />, label: "Relatórios", section: "relatorios" },
+        { icon: <FiBriefcase />, label: "Serviços", section: "servicos" },
       ];
     }
-    return []; // Caso não tenha um papel definido
+
+    if (userData?.role === "colaborador") {
+      return [
+        { icon: <FiHome />, label: "Início", section: "inicio" },
+        { icon: <FiBriefcase />, label: "Tarefas", section: "tarefas" },
+        { icon: <FiBarChart />, label: "Relatórios", section: "relatorios" },
+      ];
+    }
+
+    if (userData?.role === "cliente") {
+      return [
+        { icon: <FiHome />, label: "Início", section: "inicio" },
+        { icon: <FiBriefcase />, label: "Serviços", section: "servicos" },
+      ];
+    }
+
+    return [];
   };
 
   return (
@@ -54,20 +66,16 @@ const Sidebar = ({ collapsed, setCollapsed, sidebarOpen, setSidebarOpen }) => {
         md:translate-x-0
       `}
       style={{ height: "calc(100vh - 4rem)" }}
-      aria-label="Sidebar de navegação"
     >
-      {/* Collapse Button */}
       <div className="flex justify-end p-2">
         <button
           onClick={toggleCollapse}
           className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition"
-          title={collapsed ? "Expandir Sidebar" : "Recolher Sidebar"}
         >
           {collapsed ? <FiChevronRight size={20} /> : <FiChevronLeft size={20} />}
         </button>
       </div>
 
-      {/* Menu Items */}
       <nav className="flex flex-col gap-2 px-3">
         {getSidebarItems().map((item, index) => (
           <SidebarItem
@@ -75,14 +83,17 @@ const Sidebar = ({ collapsed, setCollapsed, sidebarOpen, setSidebarOpen }) => {
             icon={item.icon}
             label={item.label}
             collapsed={collapsed}
-            onClick={item.onClick}
+            active={section === item.section}
+            onClick={() => {
+              setSection(item.section);
+              setSidebarOpen(false);
+            }}
           />
         ))}
       </nav>
 
       <div className="flex-grow" />
 
-      {/* Footer */}
       <div className="flex flex-col gap-2 px-3 py-4 border-t border-gray-200 dark:border-gray-700">
         <button
           onClick={() => setDarkMode(!darkMode)}
@@ -104,11 +115,12 @@ const Sidebar = ({ collapsed, setCollapsed, sidebarOpen, setSidebarOpen }) => {
   );
 };
 
-const SidebarItem = ({ icon, label, collapsed, onClick }) => (
+const SidebarItem = ({ icon, label, collapsed, onClick, active }) => (
   <button
     onClick={onClick}
-    className="flex items-center gap-3 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition w-full"
-    role="menuitem"
+    className={`flex items-center gap-3 px-2 py-2 rounded-lg transition w-full
+      ${active ? "bg-blue-100 dark:bg-blue-700 text-blue-700 dark:text-white" : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}
+    `}
   >
     {icon}
     {!collapsed && <span className="text-sm font-medium">{label}</span>}
