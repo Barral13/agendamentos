@@ -5,13 +5,18 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Impede o scroll */
+  overflow-x: hidden;  /* Impede o scroll horizontal */
+  overflow-y: hidden;  /* Impede o scroll vertical */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@media (max-width: 768px) {
+  /* Em telas menores, pode ser interessante ajustar também */
+  body {
+    overflow: hidden;  /* Certifique-se de desabilitar o scroll */
+  }
 }

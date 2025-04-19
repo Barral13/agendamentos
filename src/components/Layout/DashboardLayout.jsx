@@ -9,7 +9,7 @@ const DashboardLayout = ({ children, section, setSection }) => {
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
   useEffect(() => {
-    document.body.style.overflow = sidebarOpen ? "hidden" : "";
+    document.body.style.overflow = sidebarOpen ? "hidden" : "auto";
   }, [sidebarOpen]);
 
   return (
@@ -23,7 +23,7 @@ const DashboardLayout = ({ children, section, setSection }) => {
         />
       )}
 
-      <div className="flex pt-16">
+      <div className="flex pt-16 overflow-hidden">
         <Sidebar
           collapsed={collapsed}
           setCollapsed={setCollapsed}
@@ -33,12 +33,12 @@ const DashboardLayout = ({ children, section, setSection }) => {
           setSection={setSection}
         />
         <main
-          className={`transition-all duration-300 ease-in-out w-full p-6 ${
-            collapsed ? "md:ml-20" : "md:ml-56"
-          }`}
+          className={`transition-all duration-300 ease-in-out w-full p-4 overflow-hidden ${collapsed ? "md:ml-20" : "md:ml-56"
+            }`}
         >
           {children}
         </main>
+
       </div>
     </div>
   );
